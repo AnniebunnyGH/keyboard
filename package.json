@@ -1,0 +1,19 @@
+{
+  "name": "keyboard",
+  "version": "1.0.0",
+  "description": "",
+  "main": "init-script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnniebunnyGH/keyboard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AnniebunnyGH/keyboard/issues"
+  },
+  "homepage": "https://github.com/AnniebunnyGH/keyboard#readme"
+}

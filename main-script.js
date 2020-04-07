@@ -30,10 +30,13 @@ const Keyboard = {
     this.elements.keyboard = document.createElement('div');
     this.elements.keyboard.classList.add("keyboard");
     this.elements.textarea = document.createElement('textarea');
+    this.elements.help = document.createElement("div");
+    this.elements.help.classList.add("help");
     document.body.appendChild(this.elements.textarea);
-    document.body.appendChild(document.createElement('br'));
     document.body.appendChild(this.elements.keyboard);
     Keyboard.buttonsCreate();
+    document.body.appendChild(this.elements.help);
+    document.querySelector("div.help").innerHTML = "<p><i>ОС: Win; Переключение языка: Alt+Shift</i></p>";
   },
 
   buttonsCreate() {
@@ -42,7 +45,86 @@ const Keyboard = {
     };
 
     function input_text(key) {
-      Keyboard.elements.textarea.value += key;
+      Keyboard.elements.textarea.focus();
+      if (Keyboard.elements.textarea.selectionStart || Keyboard.elements.textarea.selectionStart == "0") {
+        let start = Keyboard.elements.textarea.selectionStart;
+        let end = Keyboard.elements.textarea.selectionEnd;
+        Keyboard.elements.textarea.value = Keyboard.elements.textarea.value.substring(0, start) + key + Keyboard.elements.textarea.value.substring(end, Keyboard.elements.textarea.value.lengt);
+        Keyboard.elements.textarea.setSelectionRange(start + 1, start + 1);
+      }
+    }
+
+    function del_text() {
+      if (Keyboard.elements.textarea.selectionStart || Keyboard.elements.textarea.selectionStart == "0") {
+        let start = Keyboard.elements.textarea.selectionStart;
+        let end = Keyboard.elements.textarea.selectionEnd;
+        Keyboard.elements.textarea.value = Keyboard.elements.textarea.value.substring(0, start) + Keyboard.elements.textarea.value.substring(end + 1, Keyboard.elements.textarea.value.lengt);
+        Keyboard.elements.textarea.setSelectionRange(start, start);
+      }
+    }
+
+    function move_text(key) {
+      let start = Keyboard.elements.textarea.selectionStart;
+      let end = 0;
+      let str_len = -1;
+      let text_arr = [];
+      let n = 0;
+      let i = 0;
+      if (Keyboard.elements.textarea.selectionStart || Keyboard.elements.textarea.selectionStart == "0") {
+        switch (key) {
+          case "left":
+            Keyboard.elements.textarea.setSelectionRange(start - 1, start - 1);
+            break;
+
+          case "right":
+            Keyboard.elements.textarea.setSelectionRange(start + 1, start + 1);
+            break;
+
+          case "up":
+            start = Keyboard.elements.textarea.selectionStart;
+            text_arr = Keyboard.elements.textarea.value.split("\n");
+            if (text_arr.length > 1) {
+              while (i < 1) {
+                console.log(n);
+                str_len = str_len + text_arr[n].length + 1;
+                i = str_len / start;
+                console.log(start + " " + str_len);
+                n++;
+              }
+              if (n > 1) {
+                if (text_arr[n - 1].length > text_arr[n - 2].length) {
+                  end = str_len - 1 - text_arr[n - 1].length;
+                } else {
+                  end = start - text_arr[n - 2].length - 1;
+                }
+
+                console.log(start + " " + str_len + " " + end)
+                Keyboard.elements.textarea.setSelectionRange(end, end);
+              }
+            }
+            break;
+
+          case "down":
+            start = Keyboard.elements.textarea.selectionStart;
+            text_arr = Keyboard.elements.textarea.value.split("\n");
+            while (i < 1) {
+              console.log(n);
+              str_len = str_len + text_arr[n].length + 1;
+              i = str_len / start;
+              console.log(start + " " + str_len);
+              n++;
+            }
+            if (n < text_arr.length) {
+              if (text_arr[n - 1].length > text_arr[n].length) { end = str_len + text_arr[n].length + 1 } else {
+                end = start + text_arr[n - 1].length + 1;
+              }
+              console.log(start + " " + str_len + " " + end)
+              console.log("down");
+              Keyboard.elements.textarea.setSelectionRange(end, end);
+            }
+            break;
+        }
+      }
     }
 
     function capslock_activation() {
@@ -159,9 +241,15 @@ const Keyboard = {
       let animation_time = animation_width / animation_velocity;
       let start = performance.now();
       let animation = requestAnimationFrame(function animate() {
+        if (!item.name.includes("ShiftLeft") && !item.name.includes("ControlLeft") && !item.name.includes("AltLeft") && !item.name.includes("CapsLock")) {
+          item.classList.add("active");
+        }
         let time = (performance.now() - start) / animation_time;
         if (time >= 1) {
           cancelAnimationFrame(animation);
+          if (!item.name.includes("ShiftLeft") && !item.name.includes("ControlLeft") && !item.name.includes("AltLeft") && !item.name.includes("CapsLock")) {
+            item.classList.remove("active");
+          }
           switch (mode) {
             case "down":
               item.style.top = -animation_width + "px";
@@ -216,7 +304,7 @@ const Keyboard = {
           key_button.value = key;
           key_button.addEventListener("click", () => {
             document.querySelector("textarea").focus();
-            this.elements.textarea.value = "";
+            del_text();
             anim(key_button, "down");
             anim(key_button, "up");
           });
@@ -316,7 +404,7 @@ const Keyboard = {
           key_button.value = key;
           key_button.addEventListener("click", () => {
             document.querySelector("textarea").focus();
-            input_text(String.fromCharCode(8593));
+            move_text(key);
             anim(key_button, "down");
             anim(key_button, "up");
           })
@@ -326,7 +414,7 @@ const Keyboard = {
           key_button.value = key;
           key_button.addEventListener("click", () => {
             document.querySelector("textarea").focus();
-            input_text(String.fromCharCode(8592));
+            move_text(key);
             anim(key_button, "down");
             anim(key_button, "up");
           })
@@ -337,7 +425,7 @@ const Keyboard = {
           key_button.value = key;
           key_button.addEventListener("click", () => {
             document.querySelector("textarea").focus();
-            input_text(String.fromCharCode(8595));
+            move_text(key);
             anim(key_button, "down");
             anim(key_button, "up");
           })
@@ -348,7 +436,7 @@ const Keyboard = {
           key_button.value = key;
           key_button.addEventListener("click", () => {
             document.querySelector("textarea").focus();
-            input_text(String.fromCharCode(8594));
+            move_text(key);
             anim(key_button, "down");
             anim(key_button, "up");
           })

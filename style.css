@@ -8,7 +8,7 @@ body{
 }
 
 textarea{
-  margin: 20px auto 0px;
+  margin: 20px auto 20px;
   width: 70%;
   height: 5vw;
   resize: none;
@@ -60,3 +60,7 @@ button:focus {
   background-color: rgb(219, 152, 208);
 }
 
+.help {
+  font-family: Verdana, sans-serif;
+  text-align: center;
+}

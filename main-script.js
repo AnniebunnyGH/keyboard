@@ -490,83 +490,87 @@ const Keyboard = {
 
     let caps_position = false;
     window.addEventListener('keydown', (event) => {
-      console.log(event.code);
-      event.preventDefault();
-      let button_item = document.querySelector("button[name=" + event.code + "]");
-      let click = new MouseEvent("click");
-      switch (event.code) {
-        case "CapsLock":
-          if (!caps_position) {
-            caps_position = !caps_position;
-            capslock_activation();
-            anim(button_item, "down");
-          }
-          break;
+      if (this.keys_sets.keysInit.includes(event.code)) {
+        console.log(event.code);
+        event.preventDefault();
+        let button_item = document.querySelector("button[name=" + event.code + "]");
+        let click = new MouseEvent("click");
+        switch (event.code) {
+          case "CapsLock":
+            if (!caps_position) {
+              caps_position = !caps_position;
+              capslock_activation();
+              anim(button_item, "down");
+            }
+            break;
 
-        case "ShiftLeft":
-          if (!button_item.classList.contains('active')) {
-            shift_activation();
-            change_2nd();
-            anim(button_item, "down");
-          }
-          break;
+          case "ShiftLeft":
+            if (!button_item.classList.contains('active')) {
+              shift_activation();
+              change_2nd();
+              anim(button_item, "down");
+            }
+            break;
 
-        case "AltLeft":
-          if (!button_item.classList.contains('active')) {
-            alt_activation();
-            anim(button_item, "down");
-          }
-          break;
+          case "AltLeft":
+            if (!button_item.classList.contains('active')) {
+              alt_activation();
+              anim(button_item, "down");
+            }
+            break;
 
-        case "ControlLeft":
-          if (!button_item.classList.contains('active')) {
-            ctrl_activation();
-            anim(button_item, "down");
-          }
-          break;
+          case "ControlLeft":
+            if (!button_item.classList.contains('active')) {
+              ctrl_activation();
+              anim(button_item, "down");
+            }
+            break;
 
-        default:
-          button_item.dispatchEvent(click);
-          break;
+          default:
+            button_item.dispatchEvent(click);
+            break;
+        }
       }
     });
     window.addEventListener("keyup", (event) => {
-      event.preventDefault();
-      let button_item = document.querySelector("button[name=" + event.code + "]");
-      switch (event.code) {
-        case "CapsLock":
-          if (caps_position) {
-            caps_position = !caps_position;
-            anim(button_item, "up");
-          }
-          break;
-
-        case "ShiftLeft":
-          if (button_item.classList.contains('active')) {
-            if (this.mode.shift && this.mode.alt) {
-              change_lang();
-              shift_activation();
-            } else {
-              shift_activation();
-              change_2nd();
+      if (this.keys_sets.keysInit.includes(event.code)) {
+        event.preventDefault();
+        let button_item = document.querySelector("button[name=" + event.code + "]");
+        switch (event.code) {
+          case "CapsLock":
+            if (caps_position) {
+              caps_position = !caps_position;
+              anim(button_item, "up");
             }
-            anim(button_item, "up");
-          }
-          break;
+            break;
 
-        case "AltLeft":
-          if (button_item.classList.contains('active')) {
-            alt_activation();
-            anim(button_item, "up");
-          }
-          break;
+          case "ShiftLeft":
+            if (button_item.classList.contains('active')) {
+              if (this.mode.shift && this.mode.alt) {
+                change_lang();
+                shift_activation();
+              } else {
+                shift_activation();
+                change_2nd();
+              }
+              anim(button_item, "up");
+            }
+            break;
 
-        case "ControlLeft":
-          if (button_item.classList.contains('active')) {
-            ctrl_activation();
-            anim(button_item, "up");
-          }
-          break;
+          case "AltLeft":
+            if (button_item.classList.contains('active')) {
+              alt_activation();
+              anim(button_item, "up");
+            }
+            break;
+
+          case "ControlLeft":
+            if (button_item.classList.contains('active')) {
+              ctrl_activation();
+              anim(button_item, "up");
+            }
+            break;
+        }
       }
     })
   },
